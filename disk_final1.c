@@ -18,8 +18,8 @@ int main()
 	
 	int request_data[no_request],array_lower[no_request],array_upper[no_request],t=0;
 	
-	//taking input request
-	printf("\nEnter the request cylinder within 0 and bound %d\n",no_cylinder);
+	//taking input request from user
+	printf("\nEnter the request cylinder within 0 and %d\n",no_cylinder);
 	for(i=0;i<no_request;i++)
 	{
 		printf("Request %d : ",(i+1));
