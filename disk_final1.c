@@ -3,122 +3,120 @@ int main()
 {
 	printf("\n------------------LOOK DISK SCHEDULING ALGORITHM--------------------\n");
 	
-	int previous=0,current=0,distance=0,bound=0;
-	int length_request=0,length_low=0,length_high=0,temp;
+	int previous_request=0,current_request=0,total_distance=0,no_cylinder=0;
+	int no_request=0,no_lower=0,no_upper=0,temp;
 	int i,j,flag;
 	
 	printf("\nEnter no. of cylinder : ");
-	scanf("%d",&bound);
+	scanf("%d",&no_cylinder);
 	printf("Enter previous request cylinder : ");
-	scanf("%d",&previous);
+	scanf("%d",&previous_request);
 	printf("Enter current request cylinder : ");
-	scanf("%d",&current);
+	scanf("%d",&current_request);
 	printf("Enter the no. of request : ");
-	scanf("%d",&length_request);
+	scanf("%d",&no_request);
 	
-	int request[length_request],low[length_request],high[length_request],t=0;
+	int request_data[no_request],array_lower[no_request],array_upper[no_request],t=0;
 	
 	//taking input request
-	printf("\nEnter the request cylinder within 0 and bound %d\n",bound);
-	for(i=0;i<length_request;i++)
+	printf("\nEnter the request cylinder within 0 and bound %d\n",no_cylinder);
+	for(i=0;i<no_request;i++)
 	{
 		printf("Request %d : ",(i+1));
 		scanf("%d",&t);
-		if((t<0) || (t>=bound))
+		if((t<0) || (t>=no_cylinder))
 		i--;
 		else
-		request[i]=t;
+		request_data[i]=t;
 	}
 	
 	//dividing request array into two halves according to current request
-	for(i=0;i<length_request;i++)
+	for(i=0;i<no_request;i++)
 	{
-		if(request[i]>=current)
+		if(request_data[i]>=current_request)
 		{
-			high[length_high]=request[i];
-			length_high++;
+			array_upper[no_upper]=request_data[i];
+			no_upper++;
 		}
 		else
 		{
-			low[length_low]=request[i];
-			length_low++;
+			array_lower[no_lower]=request_data[i];
+			no_lower++;
 		}
 	}
 	
 	//sorting high array in ascending order
-	for(i=0;i<length_high-1;i++)
+	for(i=0;i<no_upper-1;i++)
 	{
-		for(j=0;j<length_high-i-1;j++)
+		for(j=0;j<no_upper-i-1;j++)
 		{
-			if(high[j] > high[j+1])
+			if(array_upper[j] > array_upper[j+1])
 			{
-				temp=high[j];
-				high[j] = high[j+1];
-				high[j+1] = temp;
+				temp=array_upper[j];
+				array_upper[j] = array_upper[j+1];
+				array_upper[j+1] = temp;
 			}
 		}
 	}
 	
 	//sorting low array in descending order
-	for(i=0;i<length_low-1;i++)
+	for(i=0;i<no_lower-1;i++)
 	{
-		for(j=0;j<length_low-i-1;j++)
+		for(j=0;j<no_lower-i-1;j++)
 		{
-			if(low[j] < low[j+1])
+			if(array_lower[j] < array_lower[j+1])
 			{
-				temp=low[j];
-				low[j] = low[j+1];
-				low[j+1] = temp;
+				temp=array_lower[j];
+				array_lower[j] = array_lower[j+1];
+				array_lower[j+1] = temp;
 			}
 		}
 	}
 	
 	//for finding the direction in which disk arm will move
-	if(previous<current)  
+	if(previous_request<current_request)  
 	flag=0;   //moves in upward direction : high array will be executed first
 	else
 	flag=1;   //moves in downward direction : low array will be executed first
 	
 	printf("\n\t    Current(From)     Next(To)   Distance covered");
-	switch(flag)
+	if(flag==0)
 	{
-		case 0:
-			for(i=0;i<length_high;i++)
-			{
-				distance=distance+(high[i]-current);
-				printf("\n\t\t%d\t\t%d\t\t%d",current,high[i],high[i]-current);
-				if(i==length_high)
-				continue;
-				else
-				current=high[i];
-			}
-			for(i=0;i<length_low;i++)
-			{
-				distance=distance+(current-low[i]);
-				printf("\n\t\t%d\t\t%d\t\t%d",current,low[i],current-low[i]);
-				current=low[i];
-			}
-			printf("\n Total seek distance : %d",distance);
-			break;
-			
-		case 1:
-			for(i=0;i<length_low;i++)
-			{
-				distance+=(current-low[i]);
-				printf("\n\t\t%d\t\t%d\t\t%d",current,low[i],current-low[i]);
-				if(i==length_low)
-				continue;
-				else
-				current=low[i];
-			}
-			for(i=0;i<length_high;i++)
-			{
-				distance+=(high[i]-current);
-				printf("\n\t\t%d\t\t%d\t\t%d",current,high[i],high[i]-current);
-				current=high[i];
-			}
-			printf("\n Total seek distance : %d",distance);
-			break;
+		for(i=0;i<no_upper;i++)
+		{
+			total_distance=total_distance+(array_upper[i]-current_request);
+			printf("\n\t\t%d\t\t%d\t\t%d",current_request,array_upper[i],array_upper[i]-current_request);
+			if(i==no_upper)
+			continue;
+			else
+			current_request=array_upper[i];
+		}
+		for(i=0;i<no_lower;i++)
+		{
+			total_distance=total_distance+(current_request-array_lower[i]);
+			printf("\n\t\t%d\t\t%d\t\t%d",current_request,array_lower[i],current_request-array_lower[i]);
+			current_request=array_lower[i];
+		}
+		printf("\n Total seek distance : %d",total_distance);
+	
+	}
+	if(flag==1)
+	{
+		for(i=0;i<no_lower;i++)
+		{
+			total_distance+=(current_request-array_lower[i]);
+			printf("\n\t\t%d\t\t%d\t\t%d",current_request,array_lower[i],current_request-array_lower[i]);
+			if(i==no_lower)
+			continue;
+			else
+			current_request=array_lower[i];
+		}
+		for(i=0;i<no_upper;i++)
+		{
+			total_distance+=(array_upper[i]-current_request);
+			printf("\n\t\t%d\t\t%d\t\t%d",current_request,array_upper[i],array_upper[i]-current_request);
+			current_request=array_upper[i];
+		}
+		printf("\n Total seek distance : %d",total_distance);
 	}
 }
-
